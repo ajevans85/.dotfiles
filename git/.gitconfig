@@ -1,0 +1,8 @@
+[user]
+	name = Adam Evans
+	email = adam@agileand.me
+[color]
+	ui = true
+[core]
+	excludesfile = ~/.gitignore_global
+  editor="emacs -nw"
