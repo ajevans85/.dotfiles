@@ -1,3 +1,0 @@
-[submodule "emacs"]
-	path = emacs
-	url = https://github.com/ajevans85/scala-for-emacs
