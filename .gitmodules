@@ -1,3 +1,3 @@
-[submodule "emacs"]
+[submodule "emacs/.emacs.d"]
 	path = emacs/.emacs.d
-	url = git@github.com:ajevans85/scala-for-emacs.git
+	url = https://github.com/ajevans85/scala-for-emacs
