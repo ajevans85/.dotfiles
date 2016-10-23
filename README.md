@@ -32,3 +32,4 @@ stow git
 stow nix
 ```
 
+Stow will create the correct symlinks in your home directory.
