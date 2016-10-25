@@ -1,6 +1,7 @@
 export ZSH=~/.oh-my-zsh
 
 ZSH_THEME="agnoster"
+ZSH_CUSTOM="$HOME/.oh-my-zsh-custom"
 DISABLE_AUTO_UPDATE="true"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
