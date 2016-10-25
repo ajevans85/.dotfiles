@@ -49,3 +49,8 @@
 [help]
   # Automatically correct and execute mistyped commands
   autocorrect = 1
+
+# Allow work email override
+[include]
+  path = ~/.gitconfig_email
+
