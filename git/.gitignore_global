@@ -6,4 +6,7 @@ syntax: glob
 
 **.ensime
 **.ensime_cache
+
 .idea
+**.ipr
+**.iws
