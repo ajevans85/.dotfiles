@@ -3,3 +3,9 @@
 
 **/.gitconfig_email
 work_customisations
+
+**/.jenv*
+
+**/.gradle/caches
+**/.gradle/native
+**/.gradle/wrapper
