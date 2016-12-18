@@ -27,3 +27,9 @@ if which jenv > /dev/null; then
 fi
 
 [ -d ~/.local/bin ] && export PATH=$PATH:~/.local/bin
+
+if [ -d $HOME/.conscript ]; then
+  export CONSCRIPT_HOME="$HOME/.conscript"
+  export CONSCRIPT_OPTS="-XX:MaxPermSize=512M -Dfile.encoding=UTF-8"
+  export PATH=$CONSCRIPT_HOME/bin:$PATH
+fi

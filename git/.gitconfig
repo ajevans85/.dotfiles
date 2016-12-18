@@ -54,3 +54,5 @@
 [include]
   path = ~/.gitconfig_email
 
+[init]
+	templatedir = ~/.git-templates
