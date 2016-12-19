@@ -9,3 +9,6 @@ work_customisations
 **/.gradle/caches
 **/.gradle/native
 **/.gradle/wrapper
+
+sbt/.sbt/0.13/plugins/project
+sbt/.sbt/0.13/plugins/target
