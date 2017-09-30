@@ -1,10 +1,7 @@
-;; Note when making changes, to reload without quiting use
-;; M-x loadfile of M-x eval-buffer
-
-;; Turn these off early to stop display on starup
-(menu-bar-mode -1) ; Disable the menubar
+;; Turn these off early to stop display on startup
+(menu-bar-mode -1) ; Disable the menu bar
 (tool-bar-mode -1) ;Disable the menu bar
-(scroll-bar-mode -1) ;Disable the scrollbar
+(scroll-bar-mode -1) ;Disable the scroll bar
 
 (prefer-coding-system 'utf-8)
 (set-language-environment "UTF-8")
@@ -15,17 +12,12 @@
 (add-to-list 'load-path "~/.emacs.d/conf.d")
 (add-to-list 'load-path "~/.emacs.d/packages/use-package")
 
-(setq package-archives nil)
-(add-to-list 'package-archives '("melpa-stable" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
-
 (require 'package)
 (setq
- package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                    ;; ("org" . "http://orgmode.org/elpa/")
+  package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
                     ("melpa" . "https://melpa.org/packages/")
                     ("melpa-stable" . "https://stable.melpa.org/packages/"))
- package-archive-priorities '(("melpa-stable" . 1)))
+  package-archive-priorities '(("melpa-stable" . 1)))
 
 (package-initialize)
 (when (not package-archive-contents)
@@ -34,7 +26,7 @@
 (require 'use-package)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;Install pacakges
+;;Install packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package exec-path-from-shell
@@ -133,12 +125,6 @@
               (writegood-mode t)
               (flyspell-mode t))))
 
-
-;; Make the status bar pretty
-(use-package powerline-evil
-  :ensure t
-  :init
-  (powerline-evil-vim-color-theme))
 
 ;; Enable (), [], {} closing braces are closed as soon as typed
 (use-package autopair

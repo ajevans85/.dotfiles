@@ -9,7 +9,9 @@
   (setq powerline-evil-tag-style 'verbose))
 
 (use-package powerline-evil
-  :ensure t)
+  :ensure t
+  :init
+  (powerline-evil-vim-color-theme))
 
 
 (set-face-attribute 'default nil :font "Source Code Pro-14")
