@@ -1,0 +1,13 @@
+mafredri/zsh-async
+Tarrasch/zsh-bd
+zsh-users/zsh-completions
+zsh-users/zsh-autosuggestions
+zsh-users/zsh-history-substring-search
+djui/alias-tips
+
+spwhitt/nix-zsh-completions
+
+# these should be at last!
+sindresorhus/pure
+zdharma/fast-syntax-highlighting
+zsh-users/zsh-history-substring-search
