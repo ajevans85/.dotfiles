@@ -1,0 +1,632 @@
+#+TITLE: Emacs Configuration
+#+AUTHOR: Adam Evans
+#+EMAIL: adam@agileand.me
+#+OPTIONS: toc:3 num:nil ^:nil
+
+* Overview
+My Emacs configuration. This configuration uses a literate programming style using [[http://orgmode.org/worg/org-contrib/babel/][Babel]] and [[https://orgmode.org][Org mode]] driven by the following =init.el=.
+
+#+begin_example
+(org-babel-load-file
+  (expand-file-name "config.org" user-emacs-directory))
+#+end_example
+
+* Initialization 
+Firstly disable the menu and toolbar at the start of the file to prevent them being shown during startup then being hidden, this helps with perceived load time.
+
+**  Disable / hide the menu bar
+#+BEGIN_SRC emacs-lisp
+(menu-bar-mode -1) 
+#+END_SRC
+**  Disable / hide the tool bar
+#+BEGIN_SRC emacs-lisp
+(tool-bar-mode -1) 
+#+END_SRC
+**  Disable / hide the scroll bar
+#+BEGIN_SRC emacs-lisp
+(scroll-bar-mode -1) 
+#+END_SRC
+
+** Package repository setup
+Configure the package repositories to use. Repositories are set to use TLS/SSL instead of plain HTTP used by default.
+
+Make sure we validate SSL certs so we trust the source
+#+BEGIN_SRC emacs-lisp
+(setq tls-checktrust t)
+#+END_SRC
+
+Set the repository list to use the https locations.
+#+BEGIN_SRC emacs-lisp
+(require 'package)
+(setq
+  package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                    ("melpa" . "https://melpa.org/packages/")
+                    ("melpa-stable" . "https://stable.melpa.org/packages/"))
+  package-archive-priorities '(("melpa-stable" . 1)))
+#+END_SRC
+
+** Configuration and package load paths
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/.emacs.d/conf.d")
+(add-to-list 'load-path "~/.emacs.d/packages/use-package")
+#+END_SRC
+
+** Initialize the package list
+#+BEGIN_SRC emacs-lisp
+(package-initialize)
+#+END_SRC
+
+This seeds the package list the first time Emacs is started
+#+BEGIN_SRC emacs-lisp
+(when (not package-archive-contents)
+  (package-refresh-contents))
+#+END_SRC
+
+** Install use package
+[[https://github.com/jwiegley/use-package][use-package]] is the basis for the rest of the package installation and configuration.   
+   
+#+BEGIN_SRC emacs-lisp
+(require 'use-package)
+#+END_SRC
+
+* Package installation and configuration
+** General packages
+*** avy
+[[https://github.com/abo-abo/avy][avy]] allows to quickly navigation to any visible text using =C-c SPC=.
+
+#+BEGIN_SRC emacs-lisp
+(use-package avy
+  :ensure t
+  :init
+  (global-set-key (kbd "C-c SPC") 'avy-goto-char))
+#+END_SRC
+
+*** company
+[[https://company-mode.github.io/][company]] is a text completion framework for Emacs. The name stands for "complete anything".
+
+#+BEGIN_SRC emacs-lisp
+(use-package company
+  :ensure t
+  :config
+  (global-company-mode))
+#+END_SRC
+
+*** counsel-projectile
+[[https://github.com/ericdanan/counsel-projectile][counsel-projectile]] integrate Projectile with the ivy completion system.
+
+#+BEGIN_SRC emacs-lisp
+(use-package counsel-projectile
+  :ensure t
+  :init
+  (counsel-projectile-on))
+#+END_SRC
+
+*** evil
+[[https://github.com/emacs-evil/evil][evil]] is an Emacs package for using VIM keybindings. Specific states are set for modes which do not play nice with evil in the =:init= section. 
+
+#+BEGIN_SRC emacs-lisp
+(use-package evil
+  :ensure t
+  :init
+  (evil-mode 1)
+  (evil-set-initial-state 'nav-mode 'emacs)
+  (evil-set-initial-state 'diff-mode 'emacs)
+  (evil-set-initial-state 'help-mode 'emacs)
+  (evil-set-initial-state 'dired-mode 'emacs)
+  (evil-set-initial-state 'eww 'emacs)
+  (evil-set-initial-state 'error 'emacs)
+  (evil-set-initial-state 'ensime-inspector-mode 'emacs)
+  (evil-set-initial-state 'sbt-mode 'emacs)
+  (evil-set-initial-state 'ensime-search-mode 'emacs)
+  (evil-set-initial-state 'fundamental-mode 'emacs)
+  (evil-set-initial-state 'git-commit-mode 'insert)
+  (evil-set-initial-state 'shell-mode 'insert))
+#+END_SRC
+
+*** evil-nerd-commenter
+[[https://github.com/redguardtoo/evil-nerd-commenter][evil-nerd-commenter]] is an evil extension for efficient line commenting. E.g. to comment out 5 lines: =M-5 ;=
+
+#+BEGIN_SRC emacs-lisp
+(use-package evil-nerd-commenter
+  :ensure t
+  :init
+  (evilnc-default-hotkeys))
+#+END_SRC
+
+*** exec-path-from-shell
+[[https://github.com/purcell/exec-path-from-shell][exec-path-from-shell]] fixes issues when using the Emacs GUI on OSX where it does not inherit the $PATH variable and fails to run shell commands.
+
+#+BEGIN_SRC emacs-lisp
+(use-package exec-path-from-shell
+  :if(memq window-system '(mac ns))
+  :ensure t
+  :init
+  (exec-path-from-shell-initialize))
+#+END_SRC
+
+*** flyspell-popup
+[[https://github.com/xuchunyang/flyspell-popup][flyspell-popup]] correct misspelled words in a popup menu.
+
+#+BEGIN_SRC emacs-lisp
+(use-package flyspell-popup
+  :ensure t
+  :bind (:map flyspell-mode-map
+        ("C-;" . flyspell-popup-correct))
+  :config
+  (add-hook 'flyspell-mode-hook 'flyspell-popup-auto-correct-mode))
+#+END_SRC
+
+*** framemove
+[[https://www.emacswiki.org/emacs/FrameMove][framemove]] allows easy navigation between buffers and windows with =shft+arrow= keys.
+
+#+BEGIN_SRC emacs-lisp
+(use-package framemove
+  :ensure t
+  :init
+  (when (fboundp 'windmove-default-keybindings)
+    (windmove-default-keybindings))
+    (setq framemove-hook-into-windmove t))
+#+END_SRC
+
+*** ivy
+[[https://github.com/abo-abo/swiper][ivy]] is a generic completion front-end for Emacs. It comes with *Counsel* a collection of Ivy enhanced versions of Common Emacs commands and *Swiper* an Ivy enhanced alternative isearch.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ivy
+  :ensure t
+  :bind (("M-x" . counsel-M-x)
+         ("C-s" . swiper)
+         ("C-x b" . ivy-switch-buffer))
+ :config
+ (setq ivy-use-virtual-buffers t
+       ivy-count-format "%d/%d "
+       ivy-height 10))
+#+END_SRC
+
+*** linum-relative
+[[https://github.com/coldnew/linum-relative][linum-relative]] displays Vim style line numbers relative to the current line in a buffer making Vim navigation style navigation easier when using evil mode.
+
+#+BEGIN_SRC emacs-lisp
+(use-package linum-relative
+  :ensure t
+  :init
+  (setq linum-relative-current-symbol "")
+  (add-hook 'prog-mode-hook 'linum-relative-mode))
+#+END_SRC
+
+*** projectile
+[[https://github.com/bbatsov/projectile][projectile]] treat git/svn/... repositories as projects allowing easy navigation.
+
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-global-mode 1))
+#+END_SRC
+
+*** which-key
+[[https://github.com/justbur/emacs-which-key][which-key]] displays available keybindings in a popup. I.e if use =M-x= and wait one second.
+
+#+BEGIN_SRC emacs-lisp
+(use-package which-key
+  :ensure t
+  :diminish which-key
+  :config
+  (which-key-mode))
+#+END_SRC
+
+*** zygospore
+[[https://github.com/LouisKottmann/zygospore.el][zygospore]] allows for quickly zooming in to a buffer and zooming out again using =C-x 1=.
+
+#+BEGIN_SRC emacs-lisp
+(use-package zygospore
+  :ensure t
+  :init
+  (global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows))
+#+END_SRC
+
+** Programming and development packages
+*** autopair
+[[https://github.com/joaotavora/autopair][autopair]] enable =()=, =[]= ={}= closing braces as soon as typed.
+
+#+BEGIN_SRC 
+(use-package autopair
+  :ensure t
+  :init
+  (autopair-global-mode))
+#+END_SRC
+
+*** magit
+[[https://magit.vc/][magit]] is an Emacs based git client.
+
+#+BEGIN_SRC emacs-lisp
+(use-package magit
+  :ensure t
+  :init
+  (setq magit-auto-revert-mode nil)
+  (setq magit-last-seen-setup-instructions "1.4.0")
+  (add-hook 'comment-mode-hook 'flyspell-prog-mode))
+#+END_SRC
+
+*** markdown-mode
+[[https://jblevins.org/projects/markdown-mode/][mardown-mode]] for working with Markdown files. Automatically enable spell checking and [[https://github.com/bnbeckwith/writegood-mode][writegood-mode]] which highlights text based on a set of weasel-words, passive-voice and duplicate words.
+
+#+BEGIN_SRC emacs-lisp
+(use-package markdown-mode
+  :ensure t
+  :init
+  (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+  (add-hook 'markdown-mode-hook
+            (lambda ()
+              (writegood-mode t)
+              (flyspell-mode t))))
+#+END_SRC
+
+*** nix-mode
+[[https://github.com/NixOS/nix-mode][nix-mode]] a major mode for editing Nix expressions
+
+#+BEGIN_SRC emacs-lisp
+(use-package nix-mode
+  :ensure t
+  :mode "\\.nix\\'")
+#+END_SRC
+
+*** restclient
+[[https://github.com/pashky/restclient.el][rest-client]] HTTP REST client for Emacs for testing web services. Supports pretty-printed JSON and XML response formatting.
+
+#+BEGIN_SRC emacs-lisp
+(use-package restclient
+  :ensure t)
+#+END_SRC
+
+*** scala
+The below Scala integration for Emacs is based on the latest [[http://ensime.org/][Ensime]] unstable builds, see [[http://ensime.org/editors/emacs/install/][Unstable Edition]]. Ensime is also configured to integrate with Ivy completion framework.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ensime
+ :ensure t
+ :pin melpa
+ :init
+ (setq ensime-completion-style 'company
+       ensime-startup-notification nil
+       ensime-startup-snapshot-notification nil
+       ensime-startup-snapshot-notification-3 nil
+       ensime-search-interface 'ivy))
+
+(use-package sbt-mode
+  :ensure t
+  :pin melpa)
+
+(use-package scala-mode
+  :ensure t
+  :pin melpa)
+#+END_SRC
+
+*** ws-butler
+[[https://github.com/lewang/ws-butler][ws-butler]] Unobtrusively trim extraneous white-space when files are saved.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ws-butler
+  :ensure t
+  :init
+  (add-hook 'prog-mode-hook 'ws-butler-mode))
+#+END_SRC
+
+** Look and feel
+*** darcula-theme
+[[https://gitlab.com/fommil/emacs-darcula-theme][darcula-theme]] the InteliJ darcula-theme ported to Emacs.
+
+#+BEGIN_SRC emacs-lisp
+(use-package darcula-theme
+  :ensure t
+  :init
+  (load-theme 'darcula t))
+#+END_SRC
+
+*** mode-icons
+[[https://github.com/ryuslash/mode-icons][mode-icons]] show icons instead of mode names in the mode-line. 
+
+#+BEGIN_SRC emacs-lisp
+(use-package mode-icons
+  :ensure t
+  :config
+  (mode-icons-mode t))
+#+END_SRC
+
+*** powerline
+[[https://github.com/milkypostman/powerline][powerline]] Emacs port of Vim powerline for a better-looking, more functional status line.
+
+#+BEGIN_SRC emacs-lisp
+(use-package powerline
+  :ensure t
+  :init
+  (setq powerline-evil-tag-style 'verbose))
+#+END_SRC
+    
+*** powerline-evil
+[[https://github.com/raugturi/powerline-evil][powerline-evil]] for better Evil support for Poweline.
+
+#+BEGIN_SRC emacs-lisp
+(use-package powerline-evil
+  :ensure t
+  :init
+  (powerline-evil-vim-color-theme))
+#+END_SRC
+
+* General settings
+** custom-file
+Emacs built in customization UI appends customizations in an unorganized mess at the bottom of the =init.el= file. The below snippet configures customizations to be placed in a separate file.
+
+#+BEGIN_SRC emacs-lisp
+(setq custom-file "~/.emacs.d/emacs-customizations.el")
+(load custom-file 'noerror)
+#+END_SRC
+
+** Flyspell spellchecking customizations
+
+Prevents printing a message for every word in the buffer slowing it down.
+#+BEGIN_SRC emacs-lisp
+(setq flyspell-issue-message-flag nil)
+#+END_SRC
+
+Use [[http://aspell.net/][aspell]] for spell checking setting the preferred language to English.
+#+BEGIN_SRC emacs-lisp
+(setq ispell-program-name "aspell")
+(setq ispell-list-command "--list")
+(setq ispell-extra-args '("--sug-mode=ultra" "--lang=en"))
+#+END_SRC
+
+Enable Flyspell spell checking in programming mode.
+#+BEGIN_SRC emacs-lisp
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+#+END_SRC
+
+Enable Flyspell spell checking in plain text mode
+#+BEGIN_SRC emacs-lisp
+(add-hook 'text-mode-hook 'flyspell-mode)
+#+END_SRC
+
+** IDO customizations
+[[https://www.emacswiki.org/emacs/InteractivelyDoThings#toc1][ido]] is part of Emacs and lets yo interactively do things with buffers and files.
+
+Below are some general preferences
+#+BEGIN_SRC emacs-lisp
+(setq ido-enable-flex-matching t
+      ido-everywhere t
+      ido-create-new-buffer 'always
+      ido-file-extensions-order '(".scala" "scala.html" "hs" ".less" ".js" ".css"))
+#+END_SRC
+
+Activate / ensure Ido mode is enabled
+#+BEGIN_SRC emacs-lisp
+(ido-mode t)
+#+END_SRC
+
+** Indentation
+
+Set the indentation to use spaces instead of tabs.
+#+BEGIN_SRC emacs-lisp
+(setq-default indent-tabs-mode nil)
+#+END_SRC
+
+** Keybinding customizations
+
+Decrease and Increase text size using =C-+= and =C--= shortcut.
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
+#+END_SRC  
+
+Show =magit-status= shortcut.
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x g") 'magit-status)
+#+END_SRC
+
+Comment/un-comment region shortcut.
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-;") 'comment-or-uncomment-region)
+#+END_SRC
+
+Fix the annoying home key taking you to start of file / end -> end of file.
+#+BEGIN_SRC emacs-lisp
+(global-set-key [home] 'beginning-of-line)
+(global-set-key [end] 'end-of-line)
+#+END_SRC
+
+Bind =C-SHIFT-f= to full screen matching default OSX functionality.
+#+BEGIN_SRC emacs-lisp
+(if(memq window-system '(mac ns))
+    (global-set-key (kbd "C-S-f") 'toggle-frame-fullscreen))
+#+END_SRC
+
+Fix Microsoft Ergotouch keyboard mapping to match Macbook Pro's.
+#+BEGIN_SRC emacs-lisp
+(when (eq system-type 'darwin)
+  (setq mac-option-modifier 'meta)
+  (setq mac-command-modifier 'control))
+#+END_SRC
+
+** Miscellaneous tweaks
+
+Reduce the frequency of garbage collection by making it happen on each 100MB of allocated data (the default is on every 0.76MB)
+#+BEGIN_SRC emacs-lisp
+(setq gc-cons-threshold 100000000)
+#+END_SRC
+
+Warn when opening files bigger than 100MB
+#+BEGIN_SRC emacs-lisp
+(setq large-file-warning-threshold 100000000)
+#+END_SRC
+
+Disable the annoying bell ring
+#+BEGIN_SRC emacs-lisp
+(setq ring-bell-function 'ignore)
+#+END_SRC
+
+Stop creating =#autosave#= files
+#+BEGIN_SRC emacs-lisp
+(setq auto-save-default nil)
+#+END_SRC
+
+Stop creating =~= lock files when editing
+#+BEGIN_SRC emacs-lisp
+(setq create-lockfiles nil)
+#+END_SRC
+
+Stop creating =backup~= files
+#+BEGIN_SRC emacs-lisp
+(setq make-backup-files nil)
+#+END_SRC
+
+Auto update file in buffer if updated on disk
+#+BEGIN_SRC emacs-lisp
+(global-auto-revert-mode)
+#+END_SRC
+
+Save typing yes / no and use short y/n aliases
+#+BEGIN_SRC emacs-lisp
+(defalias 'yes-or-no-p 'y-or-n-p) 
+#+END_SRC
+
+Don't show the welcome to Emacs screen on startup.
+#+BEGIN_SRC emacs-lisp
+(setq inhibit-startup-screen t) 
+#+END_SRC
+
+Start with a empty scratch on startup.
+#+BEGIN_SRC emacs-lisp
+(setq initial-scratch-message nil)
+#+END_SRC
+
+Replace highlighted text on typing.
+#+BEGIN_SRC emacs-lisp
+(delete-selection-mode 1) 
+#+END_SRC
+
+Integrate with OS clipboard
+#+BEGIN_SRC emacs-lisp
+(setq x-select-enable-clipboard t) 
+#+END_SRC
+
+** Programming
+
+Show unncessary whitespace that can mess up diffs
+#+BEGIN_SRC emacs-lisp
+(add-hook 'prog-mode-hook (lambda () (interactive) (setq show-trailing-whitespace 1)))
+#+END_SRC
+
+Make sure files have an empty blank line at the end for Git.
+#+BEGIN_SRC emacs-lisp
+(add-hook 'prog-mode-hook (lambda () (interactive) (setq mode-require-final-newline t)))
+#+END_SRC
+
+* Look and feel
+** Fonts and text
+Set the default font to [[https://adobe-fonts.github.io/source-code-pro/][Source Code Pro]]. Ensure it is installed, see the [[https://github.com/adobe-fonts/source-code-pro][installation instructions]] section.
+#+BEGIN_SRC emacs-lisp
+(set-face-attribute 'default nil :font "Source Code Pro-14")
+#+END_SRC
+
+Powerline status bar font customizations.
+#+BEGIN_SRC emacs-lisp
+(custom-set-faces
+ '(powerline-evil-normal-face ((t (:foreground "green" :background "white" :weight ultra-bold ))))
+ '(powerline-evil-insert-face ((t (:foreground "blue" :background "white"  :weight ultra-bold ))))
+ '(powerline-evil-visual-face ((t (:foreground "orange" :background "white" :weight ultra-bold))))
+ '(powerline-evil-operator-face ((t (:cyan "green" :background "white"  :weight ultra-bold ))))
+ '(powerline-evil-replace-face ((t (:foreground "red" :background "white" :weight ultra-bold ))))
+ '(powerline-evil-motion-face ((t (:foreground "magenta" :background "white" :weight ultra-bold ))))
+ '(powerline-evil-emacs-face ((t (:foreground "violet" :background "white" :weight ultra-bold ))))
+ '(powerline-evil-normal-face ((t (:foreground "green" :background "white"  :weight ultra-bold )))))
+#+END_SRC
+** Miscellaneous
+Display coloumn numbers in the status bar
+#+BEGIN_SRC emacs-lisp
+(column-number-mode t) 
+#+END_SRC
+
+Turn on parenthesis match highlighting
+#+BEGIN_SRC emacs-lisp
+(show-paren-mode t) 
+#+END_SRC
+
+Highlight the current selected line
+#+BEGIN_SRC emacs-lisp
+(global-hl-line-mode t) 
+(set-face-background 'hl-line "#424445")
+#+END_SRC
+
+** Powerline status bar customizations 
+
+Customization to show the current evil mode more clearly in the bottom left of the screen.   
+#+BEGIN_SRC emacs-lisp
+(setq powerline-evil-tag-style 'verbose)
+
+(defun powerline-adam ()
+  "Powerline's Vim-like mode-line with evil state at the beginning in color."
+  (interactive)
+  (setq-default mode-line-format
+                '("%e"
+                  (:eval
+                   (let* ((active (powerline-selected-window-active))
+                          (mode-line (if active 'mode-line 'mode-line-inactive))
+                          (face1 (if active 'powerline-active1 'powerline-inactive1))
+                          (face2 (if active 'powerline-active2 'powerline-inactive2))
+                          (evil-face (powerline-evil-face))
+
+                          (separator-left (intern (format "powerline-%s-%s"
+                                                          powerline-default-separator
+                                                          (car powerline-default-separator-dir))))
+                          (separator-right (intern (format "powerline-%s-%s"
+                                                           powerline-default-separator
+                                                           (cdr powerline-default-separator-dir))))
+
+                          (lhs (append (if (and evil-mode active)  (list(powerline-raw " " evil-face)
+                                                                        (powerline-raw (powerline-evil-tag) evil-face)
+                                                                        (powerline-raw " " evil-face)
+                                                                        (funcall separator-left evil-face face1))
+                                                                   (list))
+
+                                        (list (powerline-buffer-id `(mode-line-buffer-id ,mode-line) 'l)
+                                              (powerline-raw "[" mode-line 'l)
+                                              (powerline-major-mode mode-line)
+                                              (powerline-process mode-line)
+                                             (powerline-raw "]" mode-line)
+                                              (when (buffer-modified-p)
+                                                (powerline-raw "[+]" mode-line))
+                                              (when buffer-read-only
+                                                (powerline-raw "[RO]" mode-line))
+                                              (powerline-raw "[%z]" mode-line)
+                                              ;; (powerline-raw (concat "[" (mode-line-eol-desc) "]") mode-line)
+                                              (when (and (boundp 'which-func-mode) which-func-mode)
+                                                (powerline-raw which-func-format nil 'l))
+                                              (when (boundp 'erc-modified-channels-object)
+                                                (powerline-raw erc-modified-channels-object face1 'l))
+                                              (powerline-raw "[" mode-line 'l)
+                                              (powerline-minor-modes mode-line)
+                                              (powerline-raw "%n" mode-line)
+                                              (powerline-raw "]" mode-line)
+                                              (when (and vc-mode buffer-file-name)
+                                                (let ((backend (vc-backend buffer-file-name)))
+                                                  (when backend
+                                                    (concat (powerline-raw "[" mode-line 'l)
+                                                            (powerline-raw (format "%s/%s" backend (vc-working-revision buffer-file-name backend)))
+                                                            (powerline-raw "]" mode-line))))))))
+
+                          (rhs (list (powerline-raw '(10 "%i"))
+                                     (powerline-raw global-mode-string mode-line 'r)
+                                     (powerline-raw "%l," mode-line 'l)
+                                     (powerline-raw (format-mode-line '(10 "%c")))
+                                     (powerline-raw (replace-regexp-in-string  "%" "%%" (format-mode-line '(-3 "%p"))) mode-line 'r))))
+
+                     (concat (powerline-render lhs)
+                             (powerline-fill mode-line (powerline-width rhs))
+                             (powerline-render rhs)))))))
+
+
+(powerline-adam)
+
+#+END_SRC
+
+
+
