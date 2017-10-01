@@ -225,11 +225,19 @@ This seeds the package list the first time Emacs is started
   (global-set-key (kbd "C-x 1") 'zygospore-toggle-delete-other-windows))
 #+END_SRC
 
+*** writegood-mode
+[[https://github.com/bnbeckwith/writegood-mode][writegood mode]] is a minor mode to aid in finding common writing problems.
+
+#+BEGIN_SRC emacs-lisp
+(use-package writegood-mode
+  :ensure t)
+#+END_SRC
+
 ** Programming and development packages
 *** autopair
 [[https://github.com/joaotavora/autopair][autopair]] enable =()=, =[]= ={}= closing braces as soon as typed.
 
-#+BEGIN_SRC 
+#+BEGIN_SRC emacs-lisp
 (use-package autopair
   :ensure t
   :init
@@ -310,6 +318,15 @@ The below Scala integration for Emacs is based on the latest [[http://ensime.org
   :ensure t
   :init
   (add-hook 'prog-mode-hook 'ws-butler-mode))
+#+END_SRC
+
+*** yaml-mode
+[[https://github.com/yoshiki/yaml-mode][yaml-mode]] is a simple major mode for editing YAML files.
+
+#+BEGIN_SRC emacs-lisp
+(use-package yaml-mode
+  :ensure t
+  :mode "\\.yaml\\'" "\\.yml\\'")
 #+END_SRC
 
 ** Look and feel
