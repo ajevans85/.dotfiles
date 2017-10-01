@@ -27,5 +27,5 @@ alias ns="nix-shell --command 'zsh --rcs ~/.zshrc'"
 # Useful for preventing thing being saved to history by prefixing with a space
 setopt hist_ignore_space
 
-unsetopt beep                   # no bell on error
+unsetopt beep      # no bell on error
 unsetopt list_beep # no bell on ambiguous completion
