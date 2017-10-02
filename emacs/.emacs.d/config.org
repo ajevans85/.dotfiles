@@ -120,6 +120,7 @@ This seeds the package list the first time Emacs is started
   (evil-set-initial-state 'sbt-mode 'emacs)
   (evil-set-initial-state 'ensime-search-mode 'emacs)
   (evil-set-initial-state 'fundamental-mode 'emacs)
+  (evil-set-initial-state 'intero-help-mode 'emacs)
   (evil-set-initial-state 'git-commit-mode 'insert)
   (evil-set-initial-state 'shell-mode 'insert))
 #+END_SRC
