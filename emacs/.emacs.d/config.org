@@ -11,20 +11,20 @@ My Emacs configuration. This configuration uses a literate programming style usi
   (expand-file-name "config.org" user-emacs-directory))
 #+end_example
 
-* Initialization 
+* Initialization
 Firstly disable the menu and toolbar at the start of the file to prevent them being shown during startup then being hidden, this helps with perceived load time.
 
 **  Disable / hide the menu bar
 #+BEGIN_SRC emacs-lisp
-(menu-bar-mode -1) 
+(menu-bar-mode -1)
 #+END_SRC
 **  Disable / hide the tool bar
 #+BEGIN_SRC emacs-lisp
-(tool-bar-mode -1) 
+(tool-bar-mode -1)
 #+END_SRC
 **  Disable / hide the scroll bar
 #+BEGIN_SRC emacs-lisp
-(scroll-bar-mode -1) 
+(scroll-bar-mode -1)
 #+END_SRC
 
 ** Package repository setup
@@ -63,8 +63,8 @@ This seeds the package list the first time Emacs is started
 #+END_SRC
 
 ** Install use package
-[[https://github.com/jwiegley/use-package][use-package]] is the basis for the rest of the package installation and configuration.   
-   
+[[https://github.com/jwiegley/use-package][use-package]] is the basis for the rest of the package installation and configuration.
+
 #+BEGIN_SRC emacs-lisp
 (require 'use-package)
 #+END_SRC
@@ -103,7 +103,7 @@ This seeds the package list the first time Emacs is started
 #+END_SRC
 
 *** evil
-[[https://github.com/emacs-evil/evil][evil]] is an Emacs package for using VIM keybindings. Specific states are set for modes which do not play nice with evil in the =:init= section. 
+[[https://github.com/emacs-evil/evil][evil]] is an Emacs package for using VIM keybindings. Specific states are set for modes which do not play nice with evil in the =:init= section.
 
 #+BEGIN_SRC emacs-lisp
 (use-package evil
@@ -350,6 +350,14 @@ The below Scala integration for Emacs is based on the latest [[http://ensime.org
 #+END_SRC
 
 ** Look and feel
+*** all-the-icons
+[[https://github.com/domtronn/all-the-icons.el][all-the-icons]] required by spaceline-all-the-icons. Note you need to run =M-x all-the-icons-install-fonts= initially to install the font resources.
+
+#+BEGIN_SRC emacs-lisp
+(use-package all-the-icons
+  :ensure t)
+#+END_SRC
+
 *** darcula-theme
 [[https://gitlab.com/fommil/emacs-darcula-theme][darcula-theme]] the InteliJ darcula-theme ported to Emacs.
 
@@ -360,34 +368,60 @@ The below Scala integration for Emacs is based on the latest [[http://ensime.org
   (load-theme 'darcula t))
 #+END_SRC
 
-*** mode-icons
-[[https://github.com/ryuslash/mode-icons][mode-icons]] show icons instead of mode names in the mode-line. 
+*** rainbow-mode
+[[https://julien.danjou.info/projects/emacs-packages#rainbow-mode][rainbow-mode]] is a minor mode for changing the text background on hex based colour strings to preview them
 
 #+BEGIN_SRC emacs-lisp
-(use-package mode-icons
-  :ensure t
+(use-package rainbow-mode
+  :ensure t)
+#+END_SRC
+
+*** spaceline-all-the-icons
+[[https://github.com/domtronn/spaceline-all-the-icons.el][spaceline-all-the-icons]] Discrete minimal mode line
+#+BEGIN_SRC emacs-lisp
+(use-package spaceline
+  :init
   :config
-  (mode-icons-mode t))
-#+END_SRC
+  (setq spaceline-highlight-face-fun 'spaceline-highlight-face-default)
+  (set-face-attribute 'spaceline-highlight-face nil :foreground "#3c3f41" :background "#a9b7c6")
+  (set-face-attribute 'powerline-active1 nil :foreground "#3c3f41" :background "#a9b7c6")
+  (require 'spaceline-config))
 
-*** powerline
-[[https://github.com/milkypostman/powerline][powerline]] Emacs port of Vim powerline for a better-looking, more functional status line.
+(use-package spaceline-all-the-icons
+  :after spaceline
+  :config (progn
+    (setq spaceline-all-the-icons-highlight-file-name nil
+          spaceline-all-the-icons-hide-long-buffer-path nil
+          spaceline-all-the-icons-icon-set-modified 'chain
+          spaceline-all-the-icons-icon-set-window-numbering 'circle
+          spaceline-all-the-icons-separator-type 'none
+          spaceline-all-the-icons-primary-separator "")
 
-#+BEGIN_SRC emacs-lisp
-(use-package powerline
-  :ensure t
-  :init
-  (setq powerline-evil-tag-style 'verbose))
-#+END_SRC
-    
-*** powerline-evil
-[[https://github.com/raugturi/powerline-evil][powerline-evil]] for better Evil support for Poweline.
 
-#+BEGIN_SRC emacs-lisp
-(use-package powerline-evil
-  :ensure t
-  :init
-  (powerline-evil-vim-color-theme))
+    ;; Toggles
+    (spaceline-toggle-evil-state-on)
+    (spaceline-toggle-all-the-icons-buffer-size-off)
+    (spaceline-toggle-all-the-icons-buffer-position-off)
+    (spaceline-toggle-all-the-icons-vc-icon-off)
+    (spaceline-toggle-all-the-icons-vc-status-on)
+    (spaceline-toggle-all-the-icons-git-status-on)
+    (spaceline-toggle-all-the-icons-flycheck-status-off)
+    (spaceline-toggle-all-the-icons-time-off)
+    (spaceline-toggle-all-the-icons-battery-status-off)
+    (spaceline-toggle-all-the-icons-projectile-off)
+    (spaceline-toggle-all-the-icons-hud-off)
+
+    (setq evil-normal-state-tag   (propertize "<N>"  'face '((:background "#a6c52c" :height 0.8)))
+          evil-emacs-state-tag    (propertize "<E>" 'face '((:background "#9876aa" :height 0.8)))
+          evil-insert-state-tag   (propertize "<I>" 'face '((:background "#6897bb" :height 0.8)))
+          evil-replace-state-tag  (propertize "<Replace>" 'face '((:background "dark orange" :height 0.8)))
+          evil-motion-state-tag   (propertize "<Motion>" 'face '((:background "khaki" :height 0.8)))
+          evil-visual-state-tag   (propertize "<V>" 'face '((:background "yellow" :height 0.8)))
+          evil-operator-state-tag (propertize "<Operator>" 'face '((:background "sandy brown" :height 0.8))))
+
+    ;; Initialization
+    (spaceline-all-the-icons-theme 'evil-state)
+))
 #+END_SRC
 
 * General settings
@@ -452,7 +486,7 @@ Decrease and Increase text size using =C-+= and =C--= shortcut.
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
-#+END_SRC  
+#+END_SRC
 
 Show =magit-status= shortcut.
 #+BEGIN_SRC emacs-lisp
@@ -522,12 +556,12 @@ Auto update file in buffer if updated on disk
 
 Save typing yes / no and use short y/n aliases
 #+BEGIN_SRC emacs-lisp
-(defalias 'yes-or-no-p 'y-or-n-p) 
+(defalias 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
 
 Don't show the welcome to Emacs screen on startup.
 #+BEGIN_SRC emacs-lisp
-(setq inhibit-startup-screen t) 
+(setq inhibit-startup-screen t)
 #+END_SRC
 
 Start with a empty scratch on startup.
@@ -537,12 +571,12 @@ Start with a empty scratch on startup.
 
 Replace highlighted text on typing.
 #+BEGIN_SRC emacs-lisp
-(delete-selection-mode 1) 
+(delete-selection-mode 1)
 #+END_SRC
 
 Integrate with OS clipboard
 #+BEGIN_SRC emacs-lisp
-(setq x-select-enable-clipboard t) 
+(setq x-select-enable-clipboard t)
 #+END_SRC
 
 ** Programming
@@ -564,106 +598,19 @@ Set the default font to [[https://adobe-fonts.github.io/source-code-pro/][Source
 (set-face-attribute 'default nil :font "Source Code Pro-14")
 #+END_SRC
 
-Powerline status bar font customizations.
-#+BEGIN_SRC emacs-lisp
-(custom-set-faces
- '(powerline-evil-normal-face ((t (:foreground "green" :background "white" :weight ultra-bold ))))
- '(powerline-evil-insert-face ((t (:foreground "blue" :background "white"  :weight ultra-bold ))))
- '(powerline-evil-visual-face ((t (:foreground "orange" :background "white" :weight ultra-bold))))
- '(powerline-evil-operator-face ((t (:cyan "green" :background "white"  :weight ultra-bold ))))
- '(powerline-evil-replace-face ((t (:foreground "red" :background "white" :weight ultra-bold ))))
- '(powerline-evil-motion-face ((t (:foreground "magenta" :background "white" :weight ultra-bold ))))
- '(powerline-evil-emacs-face ((t (:foreground "violet" :background "white" :weight ultra-bold ))))
- '(powerline-evil-normal-face ((t (:foreground "green" :background "white"  :weight ultra-bold )))))
-#+END_SRC
 ** Miscellaneous
 Display coloumn numbers in the status bar
 #+BEGIN_SRC emacs-lisp
-(column-number-mode t) 
+(column-number-mode t)
 #+END_SRC
 
 Turn on parenthesis match highlighting
 #+BEGIN_SRC emacs-lisp
-(show-paren-mode t) 
+(show-paren-mode t)
 #+END_SRC
 
 Highlight the current selected line
 #+BEGIN_SRC emacs-lisp
-(global-hl-line-mode t) 
+(global-hl-line-mode t)
 (set-face-background 'hl-line "#424445")
 #+END_SRC
-
-** Powerline status bar customizations 
-
-Customization to show the current evil mode more clearly in the bottom left of the screen.   
-#+BEGIN_SRC emacs-lisp
-(setq powerline-evil-tag-style 'verbose)
-
-(defun powerline-adam ()
-  "Powerline's Vim-like mode-line with evil state at the beginning in color."
-  (interactive)
-  (setq-default mode-line-format
-                '("%e"
-                  (:eval
-                   (let* ((active (powerline-selected-window-active))
-                          (mode-line (if active 'mode-line 'mode-line-inactive))
-                          (face1 (if active 'powerline-active1 'powerline-inactive1))
-                          (face2 (if active 'powerline-active2 'powerline-inactive2))
-                          (evil-face (powerline-evil-face))
-
-                          (separator-left (intern (format "powerline-%s-%s"
-                                                          powerline-default-separator
-                                                          (car powerline-default-separator-dir))))
-                          (separator-right (intern (format "powerline-%s-%s"
-                                                           powerline-default-separator
-                                                           (cdr powerline-default-separator-dir))))
-
-                          (lhs (append (if (and evil-mode active)  (list(powerline-raw " " evil-face)
-                                                                        (powerline-raw (powerline-evil-tag) evil-face)
-                                                                        (powerline-raw " " evil-face)
-                                                                        (funcall separator-left evil-face face1))
-                                                                   (list))
-
-                                        (list (powerline-buffer-id `(mode-line-buffer-id ,mode-line) 'l)
-                                              (powerline-raw "[" mode-line 'l)
-                                              (powerline-major-mode mode-line)
-                                              (powerline-process mode-line)
-                                             (powerline-raw "]" mode-line)
-                                              (when (buffer-modified-p)
-                                                (powerline-raw "[+]" mode-line))
-                                              (when buffer-read-only
-                                                (powerline-raw "[RO]" mode-line))
-                                              (powerline-raw "[%z]" mode-line)
-                                              ;; (powerline-raw (concat "[" (mode-line-eol-desc) "]") mode-line)
-                                              (when (and (boundp 'which-func-mode) which-func-mode)
-                                                (powerline-raw which-func-format nil 'l))
-                                              (when (boundp 'erc-modified-channels-object)
-                                                (powerline-raw erc-modified-channels-object face1 'l))
-                                              (powerline-raw "[" mode-line 'l)
-                                              (powerline-minor-modes mode-line)
-                                              (powerline-raw "%n" mode-line)
-                                              (powerline-raw "]" mode-line)
-                                              (when (and vc-mode buffer-file-name)
-                                                (let ((backend (vc-backend buffer-file-name)))
-                                                  (when backend
-                                                    (concat (powerline-raw "[" mode-line 'l)
-                                                            (powerline-raw (format "%s/%s" backend (vc-working-revision buffer-file-name backend)))
-                                                            (powerline-raw "]" mode-line))))))))
-
-                          (rhs (list (powerline-raw '(10 "%i"))
-                                     (powerline-raw global-mode-string mode-line 'r)
-                                     (powerline-raw "%l," mode-line 'l)
-                                     (powerline-raw (format-mode-line '(10 "%c")))
-                                     (powerline-raw (replace-regexp-in-string  "%" "%%" (format-mode-line '(-3 "%p"))) mode-line 'r))))
-
-                     (concat (powerline-render lhs)
-                             (powerline-fill mode-line (powerline-width rhs))
-                             (powerline-render rhs)))))))
-
-
-(powerline-adam)
-
-#+END_SRC
-
-
-
