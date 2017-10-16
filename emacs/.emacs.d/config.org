@@ -255,6 +255,14 @@ This seeds the package list the first time Emacs is started
   (autopair-global-mode))
 #+END_SRC
 
+*** flymd
+[[https://github.com/mola-T/flymd][flymd]], preview markdown in a your web browser by running =flymd-flyit=. flymd starts a local web server continuously rendering edited markdown files.
+
+#+BEGIN_SRC emacs-lisp
+(use-package flymd
+  :ensure t)
+#+END_SRC
+
 *** haskell
 For Haskell development I use [[https://commercialhaskell.github.io/intero/][intero]] for Stack based projects.
 
