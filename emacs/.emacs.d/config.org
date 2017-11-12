@@ -358,6 +358,23 @@ The below Scala integration for Emacs is based on the latest [[http://ensime.org
   :mode "\\.yaml\\'" "\\.yml\\'")
 #+END_SRC
 
+*** yassnippet
+[[https://github.com/joaotavora/yasnippet][YASnippet]] is a template system for Emacs. It allows you to type an abbreviation and automatically expand it into function templates. Bundled language templates include: C, C++, C#, Perl, Python, Ruby, SQL, LaTeX, HTML, CSS and more. The snippet syntax is inspired from TextMate's syntax, you can even import most TextMate templates to YASnippet. 
+
+Snippets can be found at [[https://github.com/AndreaCrotti/yasnippet-snippets/tree/]]. Add these to =~/.emacs.d/yasnippet= folder as required.
+
+=SPC= is used as the expansion character. This prevents interference with Ensime's =TAB= control key
+
+#+BEGIN_SRC emacs-lisp
+(use-package yasnippet
+  :ensure t
+  :init
+  (yas-global-mode 1)
+  (define-key yas-minor-mode-map (kbd "SPC") yas-maybe-expand)
+  :config
+  (add-to-list 'yas-snippet-dirs (locate-user-emacs-file "yasnippet")))
+#+END_SRC
+
 ** Look and feel
 *** all-the-icons
 [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] required by spaceline-all-the-icons. Note you need to run =M-x all-the-icons-install-fonts= initially to install the font resources.
@@ -633,4 +650,5 @@ Highlight the current selected line
 (global-hl-line-mode t)
 (set-face-background 'hl-line "#424445")
 #+END_SRC
+
 

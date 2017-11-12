@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# Author: Adam Evans
+# name: type lambda
+# key: type#
+# --
+({ type λ[α] = ${1:Type })#λ)
