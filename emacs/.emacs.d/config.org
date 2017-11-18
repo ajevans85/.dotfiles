@@ -470,7 +470,6 @@ Emacs built in customization UI appends customizations in an unorganized mess at
 #+END_SRC
 
 ** Flyspell spellchecking customizations
-
 Prevents printing a message for every word in the buffer slowing it down.
 #+BEGIN_SRC emacs-lisp
 (setq flyspell-issue-message-flag nil)
@@ -510,14 +509,12 @@ Activate / ensure Ido mode is enabled
 #+END_SRC
 
 ** Indentation
-
 Set the indentation to use spaces instead of tabs.
 #+BEGIN_SRC emacs-lisp
 (setq-default indent-tabs-mode nil)
 #+END_SRC
 
 ** Keybinding customizations
-
 Decrease and Increase text size using =C-+= and =C--= shortcut.
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-+") 'text-scale-increase)
@@ -554,7 +551,6 @@ Fix Microsoft Ergotouch keyboard mapping to match Macbook Pro's.
 #+END_SRC
 
 ** Miscellaneous tweaks
-
 Reduce the frequency of garbage collection by making it happen on each 100MB of allocated data (the default is on every 0.76MB)
 #+BEGIN_SRC emacs-lisp
 (setq gc-cons-threshold 100000000)
@@ -615,7 +611,6 @@ Integrate with OS clipboard
 (setq x-select-enable-clipboard t)
 #+END_SRC
 ** Programming
-
 Show unncessary whitespace that can mess up diffs
 #+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook (lambda () (interactive) (setq show-trailing-whitespace 1)))
