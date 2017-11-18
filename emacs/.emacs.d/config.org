@@ -2,6 +2,7 @@
 #+AUTHOR: Adam Evans
 #+EMAIL: adam@agileand.me
 #+OPTIONS: toc:3 num:nil ^:nil
+#+PROPERTY: header-args :results silent
 
 * Overview
 My Emacs configuration. This configuration uses a literate programming style using [[http://orgmode.org/worg/org-contrib/babel/][Babel]] and [[https://orgmode.org][Org mode]] driven by the following =init.el=.
@@ -619,6 +620,19 @@ Show unncessary whitespace that can mess up diffs
 Make sure files have an empty blank line at the end for Git.
 #+BEGIN_SRC emacs-lisp
 (add-hook 'prog-mode-hook (lambda () (interactive) (setq mode-require-final-newline t)))
+#+END_SRC
+
+** Org mode
+Configure babel languages to support
+
+#+BEGIN_SRC emacs-lisp
+(org-babel-do-load-languages
+  'org-babel-load-languages
+  '((emacs-lisp . t)
+    (plantuml . t)
+    (scala . t)
+    (sh . t)
+    ))
 #+END_SRC
 
 ** Start Emacs server
