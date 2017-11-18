@@ -3,4 +3,4 @@
 # name: type lambda
 # key: type#
 # --
-({ type λ[α] = ${1:Type })#λ)
+({ type λ[α] = ${1:Type} })#λ
