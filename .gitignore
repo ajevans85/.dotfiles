@@ -17,3 +17,5 @@ sbt/.sbt/0.13/target
 sbt/.sbt/0.13/templates
 sbt/.sbt/boot
 sbt/.sbt/preloaded
+sbt/.sbt/**/target
+sbt/.sbt/**/zinc
