@@ -14,15 +14,15 @@ My Emacs configuration. This configuration uses a literate programming style usi
 * Initialization
 Firstly disable the menu and toolbar at the start of the file to prevent them being shown during startup then being hidden, this helps with perceived load time.
 
-**  Disable / hide the menu bar
+** Disable / hide the menu bar
 #+BEGIN_SRC emacs-lisp
 (menu-bar-mode -1)
 #+END_SRC
-**  Disable / hide the tool bar
+** Disable / hide the tool bar
 #+BEGIN_SRC emacs-lisp
 (tool-bar-mode -1)
 #+END_SRC
-**  Disable / hide the scroll bar
+** Disable / hide the scroll bar
 #+BEGIN_SRC emacs-lisp
 (scroll-bar-mode -1)
 #+END_SRC
@@ -195,6 +195,16 @@ This seeds the package list the first time Emacs is started
   :init
   (setq linum-relative-current-symbol "")
   (add-hook 'prog-mode-hook 'linum-relative-mode))
+#+END_SRC
+
+*** org-bullets
+[[f][org-bullets]] mode. Show org-mode bullets as UTF-8 characters. This makes the UI look cleaner imho.
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-bullets
+  :ensure t
+  :init
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+END_SRC
 
 *** projectile
@@ -650,5 +660,6 @@ Highlight the current selected line
 (global-hl-line-mode t)
 (set-face-background 'hl-line "#424445")
 #+END_SRC
+
 
 
