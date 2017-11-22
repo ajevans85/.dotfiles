@@ -169,7 +169,13 @@ This seeds the package list the first time Emacs is started
   :init
   (when (fboundp 'windmove-default-keybindings)
     (windmove-default-keybindings))
-    (setq framemove-hook-into-windmove t))
+    (setq framemove-hook-into-windmove t)
+  :config
+    ;; Make windmove work in org-mode:
+    (add-hook 'org-shiftup-final-hook 'windmove-up)
+    (add-hook 'org-shiftleft-final-hook 'windmove-left)
+    (add-hook 'org-shiftdown-final-hook 'windmove-down)
+    (add-hook 'org-shiftright-final-hook 'windmove-right))
 #+END_SRC
 
 *** ivy
@@ -381,7 +387,7 @@ Snippets can be found at [[https://github.com/AndreaCrotti/yasnippet-snippets/tr
   :ensure t
   :init
   (yas-global-mode 1)
-  (define-key yas-minor-mode-map (kbd "SPC") yas-maybe-expand)
+  (define-key yas-minor-mode-map (kbd "[tab]") yas-maybe-expand)
   :config
   (add-to-list 'yas-snippet-dirs (locate-user-emacs-file "yasnippet")))
 #+END_SRC
