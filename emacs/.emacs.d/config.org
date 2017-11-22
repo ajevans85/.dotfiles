@@ -376,7 +376,7 @@ The below Scala integration for Emacs is based on the latest [[http://ensime.org
 #+END_SRC
 
 *** yassnippet
-[[https://github.com/joaotavora/yasnippet][YASnippet]] is a template system for Emacs. It allows you to type an abbreviation and automatically expand it into function templates. Bundled language templates include: C, C++, C#, Perl, Python, Ruby, SQL, LaTeX, HTML, CSS and more. The snippet syntax is inspired from TextMate's syntax, you can even import most TextMate templates to YASnippet. 
+[[https://github.com/joaotavora/yasnippet][YASnippet]] is a template system for Emacs. It allows you to type an abbreviation and automatically expand it into function templates. Bundled language templates include: C, C++, C#, Perl, Python, Ruby, SQL, LaTeX, HTML, CSS and more. The snippet syntax is inspired from TextMate's syntax, you can even import most TextMate templates to YASnippet.
 
 Snippets can be found at [[https://github.com/AndreaCrotti/yasnippet-snippets/tree/]]. Add these to =~/.emacs.d/yasnippet= folder as required.
 
@@ -641,6 +641,21 @@ Configure babel languages to support
     ))
 #+END_SRC
 
+Set the location for where Org looks for files to include in agendas and some other things.
+#+BEGIN_SRC emacs-lisp
+(setq org-directory "~/Documents/org")
+#+END_SRC
+
+Set the default notes file
+#+BEGIN_SRC emacs-lisp
+(setq org-default-notes-file "~/Documents/org/todo-list.org")
+#+END_SRC
+
+Bind =Ctrl-c c= to =org-capture=
+#+BEGIN_SRC emacs-lisp
+(define-key global-map "C-c c" 'org-capture)
+#+END_SRC
+
 ** Start Emacs server
 Start the Emacs background server process so we can open text files from the command line in the Emacs GUI
 
@@ -698,4 +713,11 @@ org-mode color/font customization's to make it easier browsing.
 (set-face-attribute 'org-special-keyword 'nil :foreground "#bc6ec5")
 (set-face-attribute 'org-tag 'nil :foreground "#9f8766")
 (set-face-attribute 'org-verbatim 'nil :foreground "#4f97d7")
+#+END_SRC
+
+Setting Colours (faces) for todo states to give clearer view of work
+#+BEGIN_SRC emacs-lisp
+(setq org-todo-keyword-faces
+  '(("TODO" . "yellow")
+   ("DONE" . "green")))
 #+END_SRC
