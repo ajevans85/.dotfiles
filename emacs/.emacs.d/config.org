@@ -466,6 +466,25 @@ Snippets can be found at [[https://github.com/AndreaCrotti/yasnippet-snippets/tr
     (spaceline-all-the-icons-theme 'evil-state)
 ))
 #+END_SRC
+**  Other
+*** Beancount
+I use [[https://bitbucket.org/blais/beancount/commits/all][Beancount]] for plain text accounting. Beancount is a double-entry bookkeeping computer language that lets you define financial transaction records in a text file, read them in memory, generate a variety of reports from them, and provides a web interface. 
+
+For Emacs integration a minor mode is provided, this needs to be cloned from the BitBucket Mercuial repository.
+
+Firstly checkout/clone the project, I use `~/Work` for all my Git/code projects.
+
+#+BEGIN_SRC sh :tangle no
+cd ~/Work
+nix-shell -p mercurial
+hg clone https://bitbucket.org/blais/beancount
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(when (file-directory-p "~/Work/beancount/editors/emacs")
+  (add-to-list 'load-path "~/Work/beancount/editors/emacs")
+  (load "beancount"))
+#+END_SRC
 
 * General settings
 ** custom-file
@@ -653,7 +672,7 @@ Set the default notes file
 
 Bind =Ctrl-c c= to =org-capture=
 #+BEGIN_SRC emacs-lisp
-(define-key global-map "C-c c" 'org-capture)
+;;(define-key global-map "C-c c" 'org-capture) ;; TODO fix, conflicts with Avy
 #+END_SRC
 
 ** Start Emacs server
