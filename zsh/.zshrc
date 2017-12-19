@@ -33,5 +33,13 @@ alias ns="nix-shell --command 'zsh --rcs ~/.zshrc'"
 # Useful for preventing thing being saved to history by prefixing with a space
 setopt hist_ignore_space
 
+# Below history options are to share history across tmux screens
+
+# This options works like APPEND_HISTORY except that new history lines are added to the $HISTFILE incrementally (as soon as they are entered), rather than waiting until the shell exits. The file will still be periodically re-written to trim it when the number of lines grows 20% beyond the value specified by $SAVEHIST (see also the HIST_SAVE_BY_COPY option).
+setopt inc_append_history
+
+# This option both imports new commands from the history file, and also causes your typed commands to be appended to the history file
+setopt share_history
+
 unsetopt beep      # no bell on error
 unsetopt list_beep # no bell on ambiguous completion
