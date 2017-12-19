@@ -279,6 +279,15 @@ This seeds the package list the first time Emacs is started
 (use-package docker-compose-mode
   :ensure t)
 #+END_SRC
+
+[[https://github.com/spotify/dockerfile-mode][dockerfile-mode]] add syntax highlighting for dockerfiles and the ability tp build in buffer using =C-c C-b=.
+
+#+BEGIN_SRC emacs-lisp
+(use-package dockerfile-mode
+  :ensure t)
+#+END_SRC
+
+
 *** flymd
 [[https://github.com/mola-T/flymd][flymd]], preview markdown in a your web browser by running =flymd-flyit=. flymd starts a local web server continuously rendering edited markdown files.
 
