@@ -3,8 +3,7 @@ fpath=(~/.zsh $fpath)
 # Enable tab-completion
 autoload -Uz compinit && compinit
 
-if [ -x "$(command -v antibody)" ];
-then
+if [[ -x "$(command -v antibody)" ]]; then
   source <(antibody init)
   antibody bundle < ~/.antibody/bundles.txt
 else
@@ -13,9 +12,13 @@ else
 fi
 
 # If jenv enabled source it http://www.jenv.be/
-if [ -x "$(command -v jenv)" ];
-then
-    eval "$(jenv init -)"
+if [[ -x "$(command -v jenv)" ]]; then
+  eval "$(jenv init -)"
+fi
+
+# Color man pages
+if [[ -x "$(command -v most)" ]]; then
+  export PAGER="most"
 fi
 
 # Syntax highlighting for GNU Tree
@@ -24,13 +27,13 @@ export LS_COLORS="rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
-export HISTSIZE=2000
+export HISTSIZE=10000
 export HISTFILE="$HOME/.history"
 export SAVEHIST=$HISTSIZE
 
 alias ns="nix-shell --command 'zsh --rcs ~/.zshrc'"
 
-# Useful for preventing thing being saved to history by prefixing with a space
+# Useful for preventing passwords being saved to history by prefixing with a space
 setopt hist_ignore_space
 
 # Below history options are to share history across tmux screens
