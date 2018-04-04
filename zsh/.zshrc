@@ -11,7 +11,7 @@ else
   echo "Install it with: nix-env -i antibody"
 fi
 
-# If jenv enabled source it http://www.jenv.be/
+# If jenv installed source it http://www.jenv.be/
 if [[ -x "$(command -v jenv)" ]]; then
   eval "$(jenv init -)"
 fi
@@ -46,3 +46,8 @@ setopt share_history
 
 unsetopt beep      # no bell on error
 unsetopt list_beep # no bell on ambiguous completion
+
+
+if [[ -d "${HOME}/.local/bin" && "${PATH}" != *"${HOME}/.local/bin"* ]]; then
+  export PATH="${PATH}:${HOME}/.local/bin"
+fi
