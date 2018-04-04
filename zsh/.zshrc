@@ -53,3 +53,8 @@ unsetopt beep      # no bell on error
 unsetopt list_beep # no bell on ambiguous completion
 
 setopt interactivecomments # Allow bash style # comments in the shell
+
+
+if [[ -x "$(command -v figlet)" && -x "$(command -v figlet)" ]]; then
+  figlet "Hello Adam!" | lolcat
+fi
