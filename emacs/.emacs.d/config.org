@@ -121,7 +121,6 @@ This seeds the package list the first time Emacs is started
   (evil-set-initial-state 'sbt-mode 'emacs)
   (evil-set-initial-state 'ensime-search-mode 'emacs)
   (evil-set-initial-state 'fundamental-mode 'emacs)
-  (evil-set-initial-state 'intero-help-mode 'emacs)
   (evil-set-initial-state 'git-commit-mode 'insert)
   (evil-set-initial-state 'shell-mode 'insert))
 #+END_SRC
@@ -297,13 +296,19 @@ This seeds the package list the first time Emacs is started
 #+END_SRC
 
 *** haskell
-For Haskell development I use [[https://commercialhaskell.github.io/intero/][intero]] for Stack based projects.
+For Haskell development I use [[https://github.com/jyp/dante][dante]].
 
 #+BEGIN_SRC emacs-lisp
-(use-package intero
+(use-package dante
   :ensure t
-  :config
-  (add-hook 'haskell-mode-hook 'intero-mode))
+  :after haskell-mode
+  :commands 'dante-mode
+  :init
+  (add-hook 'haskell-mode-hook 'dante-mode)
+  (add-hook 'haskell-mode-hook 'flycheck-mode)
+  (add-hook 'dante-mode-hook
+   '(lambda () (flycheck-add-next-checker 'haskell-dante
+                '(warning . haskell-hlint)))))
 #+END_SRC
 
 *** magit
