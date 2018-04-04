@@ -100,7 +100,7 @@ This seeds the package list the first time Emacs is started
   :ensure t
   :after projectile
   :init
-  (counsel-projectile-on))
+  (counsel-projectile-mode))
 #+END_SRC
 
 *** evil
