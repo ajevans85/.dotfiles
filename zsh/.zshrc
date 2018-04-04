@@ -16,6 +16,11 @@ if [[ -x "$(command -v jenv)" ]]; then
   eval "$(jenv init -)"
 fi
 
+# Stack installs files to ~/.local/bin, add to PATH if present
+if [[ -d "${HOME}/.local/bin" && "${PATH}" != *"${HOME}/.local/bin"* ]]; then
+  export PATH="${PATH}:${HOME}/.local/bin"
+fi
+
 # Color man pages
 if [[ -x "$(command -v most)" ]]; then
   export PAGER="most"
@@ -47,7 +52,4 @@ setopt share_history
 unsetopt beep      # no bell on error
 unsetopt list_beep # no bell on ambiguous completion
 
-
-if [[ -d "${HOME}/.local/bin" && "${PATH}" != *"${HOME}/.local/bin"* ]]; then
-  export PATH="${PATH}:${HOME}/.local/bin"
-fi
+setopt interactivecomments # Allow bash style # comments in the shell
