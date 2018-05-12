@@ -286,7 +286,6 @@ This seeds the package list the first time Emacs is started
   :ensure t)
 #+END_SRC
 
-
 *** flymd
 [[https://github.com/mola-T/flymd][flymd]], preview markdown in a your web browser by running =flymd-flyit=. flymd starts a local web server continuously rendering edited markdown files.
 
@@ -487,9 +486,9 @@ Snippets can be found at [[https://github.com/AndreaCrotti/yasnippet-snippets/tr
     (spaceline-all-the-icons-theme 'evil-state)
 ))
 #+END_SRC
-**  Other
+** Other
 *** Beancount
-I use [[https://bitbucket.org/blais/beancount/commits/all][Beancount]] for plain text accounting. Beancount is a double-entry bookkeeping computer language that lets you define financial transaction records in a text file, read them in memory, generate a variety of reports from them, and provides a web interface. 
+I use [[https://bitbucket.org/blais/beancount/commits/all][Beancount]] for plain text accounting. Beancount is a double-entry bookkeeping computer language that lets you define financial transaction records in a text file, read them in memory, generate a variety of reports from them, and provides a web interface.
 
 For Emacs integration a minor mode is provided, this needs to be cloned from the BitBucket Mercuial repository.
 
@@ -760,4 +759,22 @@ Setting Colours (faces) for todo states to give clearer view of work
 (setq org-todo-keyword-faces
   '(("TODO" . "yellow")
    ("DONE" . "green")))
+#+END_SRC
+
+Fancy todo states. Ref https://thraxys.wordpress.com/2016/01/14/pimp-up-your-org-agenda/
+#+BEGIN_SRC emacs-lisp
+(setq org-todo-keywords '(
+  (sequence "☛ TODO(t)" "|" "✔ DONE(d)")
+  (sequence "⚑ WAITING(w)" "|")
+  (sequence "|" "✘ CANCELED(c)")))
+#+END_SRC
+
+Enable org text indenting to match the hierarchical indenting
+#+BEGIN_SRC emacs-lisp
+(setq org-startup-indented t)
+#+END_SRC
+
+Enable word wrapping in org mode
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mode-hook 'turn-on-visual-line-mode)
 #+END_SRC
