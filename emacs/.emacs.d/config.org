@@ -757,8 +757,9 @@ org-mode color/font customization's to make it easier browsing.
 Setting Colours (faces) for todo states to give clearer view of work
 #+BEGIN_SRC emacs-lisp
 (setq org-todo-keyword-faces
-  '(("TODO" . "yellow")
-   ("DONE" . "green")))
+  '(("DONE" . "green")
+   ("☛ TODO" . "yellow")
+   ("⚑ WAITING" . "red")))
 #+END_SRC
 
 Fancy todo states. Ref https://thraxys.wordpress.com/2016/01/14/pimp-up-your-org-agenda/
