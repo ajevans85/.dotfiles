@@ -12,7 +12,8 @@ else
 fi
 
 # If jenv installed source it http://www.jenv.be/
-if [[ -x "$(command -v jenv)" ]]; then
+if [[ -d "$HOME/.jenv" ]]; then
+  export PATH="$HOME/.jenv/bin:$PATH"
   eval "$(jenv init -)"
 fi
 
