@@ -180,6 +180,10 @@ This seeds the package list the first time Emacs is started
 *** ivy
 [[https://github.com/abo-abo/swiper][ivy]] is a generic completion front-end for Emacs. It comes with *Counsel* a collection of Ivy enhanced versions of Common Emacs commands and *Swiper* an Ivy enhanced alternative isearch.
 
+~ivy-use-selectable-prompt~ sets your current input to be selectable as a candidate. Press ~C-p~ when you're on the first candidate to select your input instead.
+
+This solves the long standing issue of e.g. creating a file or a directory foo when a file foobar already exists. Previously, the only solution was to use ~C-M-j~. It's still available, but now you can also select your input with C-p and press RET.
+
 #+BEGIN_SRC emacs-lisp
 (use-package ivy
   :ensure t
@@ -189,7 +193,8 @@ This seeds the package list the first time Emacs is started
  :config
  (setq ivy-use-virtual-buffers t
        ivy-count-format "%d/%d "
-       ivy-height 10))
+       ivy-height 10
+       ivt-use-selectable-prompt t))
 #+END_SRC
 
 *** linum-relative
@@ -676,7 +681,7 @@ Configure babel languages to support
   '((emacs-lisp . t)
     (plantuml . t)
     (scala . t)
-    (sh . t)
+    (shell . t)
     ))
 #+END_SRC
 
