@@ -1,3 +1,35 @@
+# --------------------------
+# Set up the PATH
+# --------------------------
+
+# Nix integration
+if [[ -d "${HOME}/.nix-profile/bin" && "$PATH" != *"${HOME}/.nix-profile/bin"* ]]; then
+  source ~/.nix-profile/etc/profile.d/nix.sh
+fi
+
+# MacPorts integration
+if [[ -d /opt/local/bin && "$PATH" != *"/opt/local/bin"* ]]; then
+  export PATH="/opt/local/bin:$PATH"
+fi
+
+if [[ -d /opt/local/sbin && "$PATH" != *"/opt/local/sbin"* ]]; then
+  export PATH="/opt/local/sbin:$PATH"
+fi
+
+# Jenv integration
+if [[ -d "${HOME}/.jenv" && "$PATH" != *"${HOME}/.jenv/bin"* ]]; then
+  export PATH="${PATH}:${HOME}/.jenv/bin"
+  eval "$(jenv init -)"
+fi
+
+# Stack installs files to ~/.local/bin, add to PATH if present
+if [[ -d "${HOME}/.local/bin" && "${PATH}" != *"${HOME}/.local/bin"* ]]; then
+  export PATH="${PATH}:${HOME}/.local/bin"
+fi
+
+# --------------------
+# Configure shell
+# --------------------
 fpath=(~/.zsh $fpath)
 
 # Enable tab-completion
@@ -9,17 +41,6 @@ if [[ -x "$(command -v antibody)" ]]; then
 else
   echo "Unable to load ZSH configuration, missing application 'antibody'"
   echo "Install it with: nix-env -i antibody"
-fi
-
-# If jenv installed source it http://www.jenv.be/
-if [[ -d "$HOME/.jenv" ]]; then
-  export PATH="$HOME/.jenv/bin:$PATH"
-  eval "$(jenv init -)"
-fi
-
-# Stack installs files to ~/.local/bin, add to PATH if present
-if [[ -d "${HOME}/.local/bin" && "${PATH}" != *"${HOME}/.local/bin"* ]]; then
-  export PATH="${PATH}:${HOME}/.local/bin"
 fi
 
 # Color man pages
@@ -56,6 +77,12 @@ unsetopt list_beep # no bell on ambiguous completion
 setopt interactivecomments # Allow bash style # comments in the shell
 
 
-if [[ -x "$(command -v figlet)" && -x "$(command -v figlet)" ]]; then
+if [[ -x "$(command -v figlet)" && -x "$(command -v lolcat)" ]]; then
   figlet "Hello Adam!" | lolcat
+fi
+
+if [[ "$(which ls)" =~ "${HOME}/.nix-profile/bin/ls" ]]; then
+  alias ls="ls --color=auto"
+else
+  alias ls="ls -G"
 fi
