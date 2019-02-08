@@ -72,6 +72,15 @@ This seeds the package list the first time Emacs is started
 
 * Package installation and configuration
 ** General packages
+*** ace-window
+[[https://github.com/abo-abo/ace-window][ace-window]] allows easy navigation between buffers and windows with =M-o= key.
+
+#+BEGIN_SRC emacs-lisp
+(use-package ace-window
+  :ensure t
+  :bind ("M-o" . ace-window))
+#+END_SRC
+
 *** avy
 [[https://github.com/abo-abo/avy][avy]] allows to quickly navigation to any visible text using =C-c SPC=.
 
@@ -102,7 +111,6 @@ This seeds the package list the first time Emacs is started
   :init
   (counsel-projectile-mode))
 #+END_SRC
-
 *** evil
 [[https://github.com/emacs-evil/evil][evil]] is an Emacs package for using VIM keybindings. Specific states are set for modes which do not play nice with evil in the =:init= section.
 
@@ -159,24 +167,6 @@ This seeds the package list the first time Emacs is started
   (add-hook 'flyspell-mode-hook 'flyspell-popup-auto-correct-mode))
 #+END_SRC
 
-*** framemove
-[[https://www.emacswiki.org/emacs/FrameMove][framemove]] allows easy navigation between buffers and windows with =shft+arrow= keys.
-
-#+BEGIN_SRC emacs-lisp
-(use-package framemove
-  :ensure t
-  :init
-  (when (fboundp 'windmove-default-keybindings)
-    (windmove-default-keybindings))
-    (setq framemove-hook-into-windmove t)
-  :config
-    ;; Make windmove work in org-mode:
-    (add-hook 'org-shiftup-final-hook 'windmove-up)
-    (add-hook 'org-shiftleft-final-hook 'windmove-left)
-    (add-hook 'org-shiftdown-final-hook 'windmove-down)
-    (add-hook 'org-shiftright-final-hook 'windmove-right))
-#+END_SRC
-
 *** ivy
 [[https://github.com/abo-abo/swiper][ivy]] is a generic completion front-end for Emacs. It comes with *Counsel* a collection of Ivy enhanced versions of Common Emacs commands and *Swiper* an Ivy enhanced alternative isearch.
 
@@ -225,7 +215,9 @@ This solves the long standing issue of e.g. creating a file or a directory foo w
 (use-package projectile
   :ensure t
   :init
-  (projectile-global-mode 1))
+  (projectile-global-mode 1)
+  :bind-keymap
+  ("C-c p" . projectile-command-map))
 #+END_SRC
 
 *** smex
