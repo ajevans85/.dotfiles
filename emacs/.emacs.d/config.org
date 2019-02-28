@@ -115,22 +115,23 @@ This seeds the package list the first time Emacs is started
 [[https://github.com/emacs-evil/evil][evil]] is an Emacs package for using VIM keybindings. Specific states are set for modes which do not play nice with evil in the =:init= section.
 
 #+BEGIN_SRC emacs-lisp
-(use-package evil
+  (use-package evil
+    :ensure t
+    :init
+    (setq evil-want-integration nil)
+    (setq evil-want-keybinding nil)
+    :config
+    (evil-mode 1)
+  )
+#+END_SRC
+
+Load additional evil integrations
+#+BEGIN_SRC emacs-lisp
+(use-package evil-collection
+  :after evil
   :ensure t
-  :init
-  (evil-mode 1)
-  (evil-set-initial-state 'nav-mode 'emacs)
-  (evil-set-initial-state 'diff-mode 'emacs)
-  (evil-set-initial-state 'help-mode 'emacs)
-  (evil-set-initial-state 'dired-mode 'emacs)
-  (evil-set-initial-state 'eww 'emacs)
-  (evil-set-initial-state 'error 'emacs)
-  (evil-set-initial-state 'ensime-inspector-mode 'emacs)
-  (evil-set-initial-state 'sbt-mode 'emacs)
-  (evil-set-initial-state 'ensime-search-mode 'emacs)
-  (evil-set-initial-state 'fundamental-mode 'emacs)
-  (evil-set-initial-state 'git-commit-mode 'insert)
-  (evil-set-initial-state 'shell-mode 'insert))
+  :config
+  (evil-collection-init))
 #+END_SRC
 
 *** evil-nerd-commenter
@@ -502,6 +503,11 @@ hg clone https://bitbucket.org/blais/beancount
   (add-to-list 'load-path "~/Work/beancount/editors/emacs")
   (load "beancount"))
 #+END_SRC
+*** EPresent
+#+BEGIN_SRC emacs-lisp
+(use-package epresent
+  :ensure t)
+#+END_SRC
 
 * General settings
 ** custom-file
@@ -723,7 +729,7 @@ Turn on parenthesis match highlighting
 
 Highlight the current selected line
 #+BEGIN_SRC emacs-lisp
-(global-hl-line-mode t)
+(global-hl-line-mode -1)
 (set-face-background 'hl-line "#424445")
 #+END_SRC
 
@@ -775,4 +781,18 @@ Enable org text indenting to match the hierarchical indenting
 Enable word wrapping in org mode
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-mode-hook 'turn-on-visual-line-mode)
+#+END_SRC
+
+Enable resizing of inline images in org-mode
+#+BEGIN_SRC emacs-lisp
+(setq org-image-actual-width nil)
+#+END_SRC
+
+** org-mode epresent customisaitions
+#+BEGIN_SRC emacs-lisp
+  (evil-set-initial-state 'epresent-mode 'emacs)
+  
+  (setq epresent-hide-properties t
+        epresent-mode-line nil
+        epresent-inline-image-overlays t)
 #+END_SRC
