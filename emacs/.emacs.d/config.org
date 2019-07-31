@@ -49,7 +49,6 @@ Set the repository list to use the https locations.
 ** Configuration and package load paths
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/.emacs.d/conf.d")
-(add-to-list 'load-path "~/.emacs.d/packages/use-package")
 #+END_SRC
 
 ** Initialize the package list
@@ -107,6 +106,7 @@ This seeds the package list the first time Emacs is started
 #+BEGIN_SRC emacs-lisp
 (use-package counsel-projectile
   :ensure t
+  :pin melpa
   :after projectile
   :init
   (counsel-projectile-mode))
@@ -153,6 +153,7 @@ Load additional evil integrations
   :if(memq window-system '(mac ns))
   :ensure t
   :init
+  (exec-path-from-shell-copy-env "NIX_PATH")
   (exec-path-from-shell-initialize))
 #+END_SRC
 
@@ -178,6 +179,7 @@ This solves the long standing issue of e.g. creating a file or a directory foo w
 #+BEGIN_SRC emacs-lisp
 (use-package ivy
   :ensure t
+  :pin melpa
   :bind (("M-x" . counsel-M-x)
          ("C-s" . swiper)
          ("C-x b" . ivy-switch-buffer))
@@ -296,16 +298,13 @@ This solves the long standing issue of e.g. creating a file or a directory foo w
 For Haskell development I use [[https://github.com/jyp/dante][dante]].
 
 #+BEGIN_SRC emacs-lisp
-(use-package dante
-  :ensure t
-  :after haskell-mode
-  :commands 'dante-mode
-  :init
-  (add-hook 'haskell-mode-hook 'dante-mode)
-  (add-hook 'haskell-mode-hook 'flycheck-mode)
-  (add-hook 'dante-mode-hook
-   '(lambda () (flycheck-add-next-checker 'haskell-dante
-                '(warning . haskell-hlint)))))
+;; (use-package dante
+;;   :ensure t
+;;   :after haskell-mode
+;;   :commands 'dante-mode
+;;   :init
+;;   (add-hook 'haskell-mode-hook 'flycheck-mode)
+;;   (add-hook 'haskell-mode-hook 'dante-mode))
 #+END_SRC
 
 *** magit
@@ -341,6 +340,14 @@ For Haskell development I use [[https://github.com/jyp/dante][dante]].
 (use-package nix-mode
   :ensure t
   :mode "\\.nix\\'")
+#+END_SRC
+
+*** nix-sandbox
+[[https://github.com/travisbhartwell/nix-emacs][nix-sandbox]] Utility functions to work with nix sandboxes.
+
+#+BEGIN_SRC emacs-lisp
+(use-package nix-sandbox
+  :ensure t)
 #+END_SRC
 
 *** restclient
@@ -408,6 +415,43 @@ Snippets can be found at [[https://github.com/AndreaCrotti/yasnippet-snippets/tr
   (define-key yas-minor-mode-map (kbd "<tab>") yas-maybe-expand)
   :config
   (add-to-list 'yas-snippet-dirs (locate-user-emacs-file "yasnippet")))
+#+END_SRC
+
+*** lsp-mode (Language Server Protocol Support for Emacs)
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-mode
+  :init
+  :hook (haskell-mode . lsp) 
+  :commands lsp)
+
+(use-package lsp-ui 
+  :ensure t
+  :commands lsp-ui-mode)
+  
+(use-package helm-lsp 
+  :ensure t
+  :commands helm-lsp-workspace-symbol)
+
+(use-package lsp-treemacs 
+  :ensure t
+  :commands lsp-treemacs-errors-list)
+
+(use-package lsp-haskell
+  :ensure t
+  :init
+  (setq lsp-haskell-process-wrapper-function 
+    (lambda (args)
+      (append
+        (append (list "nix-shell" "-I" "." "--command" )
+                (list (mapconcat 'identity args " ")))
+        (list (nix-current-sandbox)))))
+  :config
+  (setq haskell-enable-hindent t
+        haskell-completion-backend 'lsp
+        haskell-process-type 'cabal-new-repl))
+  
+(use-package direnv
+  :ensure t)
 #+END_SRC
 
 ** Look and feel
@@ -503,12 +547,14 @@ hg clone https://bitbucket.org/blais/beancount
   (add-to-list 'load-path "~/Work/beancount/editors/emacs")
   (load "beancount"))
 #+END_SRC
-*** EPresent
+*** mu4e
 #+BEGIN_SRC emacs-lisp
-(use-package epresent
-  :ensure t)
+(let ((path "~/.nix-profile/share/emacs/site-lisp/mu4e"))
+  (when (file-directory-p path)
+  (add-to-list 'load-path (file-truename (expand-file-name path)))
+  (autoload 'mu4e "mu4e" "Launch mu4e and show the main window" t)
+  (setq mu4e-maildir "~/Mail")))
 #+END_SRC
-
 * General settings
 ** custom-file
 Emacs built in customization UI appends customizations in an unorganized mess at the bottom of the =init.el= file. The below snippet configures customizations to be placed in a separate file.
@@ -526,9 +572,9 @@ Prevents printing a message for every word in the buffer slowing it down.
 
 Use [[http://aspell.net/][aspell]] for spell checking setting the preferred language to English.
 #+BEGIN_SRC emacs-lisp
-(setq ispell-program-name "aspell")
-(setq ispell-list-command "--list")
-(setq ispell-extra-args '("--sug-mode=ultra" "--lang=en"))
+(setq ispell-program-name "/usr/local/bin/aspell"
+      ispell-list-command "--list"
+      ispell-extra-args '("--sug-mode=ultra" "--lang=en"))
 #+END_SRC
 
 Enable Flyspell spell checking in programming mode.
@@ -788,11 +834,3 @@ Enable resizing of inline images in org-mode
 (setq org-image-actual-width nil)
 #+END_SRC
 
-** org-mode epresent customisaitions
-#+BEGIN_SRC emacs-lisp
-  (evil-set-initial-state 'epresent-mode 'emacs)
-  
-  (setq epresent-hide-properties t
-        epresent-mode-line nil
-        epresent-inline-image-overlays t)
-#+END_SRC
