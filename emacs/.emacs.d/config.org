@@ -296,16 +296,16 @@ This solves the long standing issue of e.g. creating a file or a directory foo w
 For Haskell development I use [[https://github.com/jyp/dante][dante]].
 
 #+BEGIN_SRC emacs-lisp
-(use-package dante
-  :ensure t
-  :after haskell-mode
-  :commands 'dante-mode
-  :init
-  (add-hook 'haskell-mode-hook 'dante-mode)
-  (add-hook 'haskell-mode-hook 'flycheck-mode)
-  (add-hook 'dante-mode-hook
-   '(lambda () (flycheck-add-next-checker 'haskell-dante
-                '(warning . haskell-hlint)))))
+  ;; (use-package dante
+  ;;   :ensure t
+  ;;   :after haskell-mode
+  ;;   :commands 'dante-mode
+  ;;   :init
+  ;;   (add-hook 'haskell-mode-hook 'dante-mode)
+  ;;   (add-hook 'haskell-mode-hook 'flycheck-mode)
+  ;;   (add-hook 'dante-mode-hook
+  ;;    '(lambda () (flycheck-add-next-checker 'haskell-dante
+  ;;                 '(warning . haskell-hlint)))))
 #+END_SRC
 
 *** magit
@@ -795,4 +795,15 @@ Enable resizing of inline images in org-mode
   (setq epresent-hide-properties t
         epresent-mode-line nil
         epresent-inline-image-overlays t)
+#+END_SRC
+
+* Custom functions
+** Kill other buffers
+A simple function to kill all buffers except the current one. Ref https://www.emacswiki.org/emacs/KillingBuffers#toc3
+
+#+BEGIN_SRC emacs-lisp
+(defun kill-other-buffers ()
+  "Kill all other buffers."
+  (interactive)
+  (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
 #+END_SRC
