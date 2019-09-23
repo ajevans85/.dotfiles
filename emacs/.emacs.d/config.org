@@ -66,7 +66,8 @@ This seeds the package list the first time Emacs is started
 [[https://github.com/jwiegley/use-package][use-package]] is the basis for the rest of the package installation and configuration.
 
 #+BEGIN_SRC emacs-lisp
-(require 'use-package)
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 #+END_SRC
 
 * Package installation and configuration
